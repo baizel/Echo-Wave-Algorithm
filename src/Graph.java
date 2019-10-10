@@ -31,8 +31,8 @@ public class Graph {
     @Override
     public String toString(){
         StringBuilder ret = new StringBuilder();
-        for (int i =0; i < NUMBER_OF_NODES; i++){
-            ret.append(String.format("Neigh Node %d: %s\n",nodes.get(i).getId(),nodes.get(i).getNeighbours().toString()));
+        for (Node n: nodes){
+            ret.append(String.format("Node %d with message %d, Neighbours %s\n",n.getId(),n.messageQueue.size(),n.getNeighbours().toString()));
         }
         return ret.toString();
     }
