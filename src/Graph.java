@@ -8,7 +8,6 @@ import java.util.Set;
 public class Graph {
     private ArrayList<Node> nodes = new ArrayList<>();
     private int numberOfEdges;
-    private Set<Edge> edges = new HashSet<>();
 
     public Graph(int numOfNodes, ArrayList<ArrayList<Integer>> neighbour) {
         for (int i = 0; i < numOfNodes; i++) {
@@ -16,6 +15,7 @@ public class Graph {
         }
 
         //Create neighbours
+        Set<Edge> edges = new HashSet<>();
         for (int i = 0; i < neighbour.size(); i++) {
             for (int j = 0; j < neighbour.get(i).size(); j++) {
                 Node neigh = getNode(neighbour.get(i).get(j));

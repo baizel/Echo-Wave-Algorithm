@@ -9,14 +9,6 @@ public class Edge {
         this.toNode = toNode;
     }
 
-    public int getFromNode() {
-        return fromNode;
-    }
-
-    public int getToNode() {
-        return toNode;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

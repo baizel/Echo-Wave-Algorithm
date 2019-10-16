@@ -1,5 +1,3 @@
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
@@ -8,9 +6,9 @@ public class Node {
 
 
     public int messageSentCounter = 0;
+    public Deque<Token> messageQueue;
     private int id;
     private ArrayList<Node> neighbours;
-
     //Echo wave vars
     private boolean isInitiator = false;
     private Node father = null;
@@ -18,13 +16,16 @@ public class Node {
     private boolean hasSendTokenToFather = false;
     private boolean hasBroadcastedToNeighbours = false;
 
-    public Deque<Token> messageQueue;
-
 
     public Node(int id) {
         this.id = id;
         neighbours = new ArrayList<>();
         messageQueue = new ArrayDeque<>();
+    }
+
+    private static void sendToken(Node sender, Node receiver) {
+        sender.messageSentCounter++;
+        receiver.messageQueue.add(new Token(sender));
     }
 
     public int getId() {
@@ -42,7 +43,6 @@ public class Node {
     public ArrayList<Node> getNeighbours() {
         return neighbours;
     }
-
 
     public void initiateEchoWave() {
         isInitiator = true;
@@ -93,12 +93,6 @@ public class Node {
         }
         return false;
     }
-
-    private static void sendToken(Node sender, Node receiver) {
-        sender.messageSentCounter++;
-        receiver.messageQueue.add(new Token(sender));
-    }
-
 
     public String toString() {
         return Integer.toString(id);
