@@ -1,48 +1,58 @@
 import java.util.ArrayList;
 
 public class Test {
+    private final static int K = 10;
 
-    public static void main(String[] args) {
-        ArrayList<Graph> gs = Graph.GenerateGraphFromTxt("nodes.txt");
-//        for(Graph g: gs) {
-//
-//        }
-        Graph g = gs.get(1);
-        System.out.println(g);
-        int N = g.getNumberOfNodes();
-        int K = 10;
-        int counter = 0;
-        boolean isInitiated = false;
-        boolean decided = false;
+    public static void main(String[] args) throws IllegalAccessException {
+        ArrayList<Graph> allGraphs = Graph.GenerateGraphFromTxt("nodes.txt");
+        int graphNumber = 1;
+        for (Graph graph : allGraphs) {
+            System.out.println("/////////////////////// Graph " + graphNumber + " ///////////////////////////////");
 
-        g.getNode(0).initiateEchoWave();
-        outerLoop:
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < K; j++) {
-                int numberOfNodes = getRandomIntegerBetweenRange(1, N);
-                for (int k = 0; k < numberOfNodes; k++) {
-                    try {
-                        Node n = g.getNode(getRandomIntegerBetweenRange(0, N - 1));
-                        decided = n.runEchoExecution();
-//                        System.out.print(" Node " + n);
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
+            int iterationCounter = 0;
+            int N = graph.getNumberOfNodes();
+            boolean isInitiated = false;
+            boolean hasDecided = false;
+
+            outerLoop:
+            for (int i = 0; i < N; i++) {
+                for (int j = 0; j < K; j++) {
+                    int numberOfNodes = getRandomIntegerBetweenRange(0, N);
+                    for (int k = 0; k < numberOfNodes; k++) {
+
+                        int randInt = getRandomIntegerBetweenRange(0, N - 1);
+                        if (!isInitiated) {
+                            System.out.println(String.format("Node %d has initiated", graph.getNode(randInt).getId()));
+                            graph.getNode(randInt).initiateEchoWave();
+                            isInitiated = true;
+                        } else {
+                            Node n = graph.getNode(randInt);
+                            hasDecided = n.runEchoExecution();
+                        }
+
+                        if (hasDecided) {
+                            System.out.println(String.format("\nSummary\n" +
+                                            "Iterations:\t\t\t\t| %d \n" +
+                                            "# of Edges:\t\t\t\t| %d \n" +
+                                            "Theoretical # 2*|E|:\t| %d \n" +
+                                            "Actual Message counter:\t| %d",
+                                    iterationCounter,
+                                    graph.getNumberOfEdges(),
+                                    2 * graph.getNumberOfEdges(),
+                                    graph.getNumberOfMessagesSent()));
+                            break outerLoop;
+
+                        }
+
                     }
-                    if (decided) {
-                        System.out.println(String.format("\nIteration: %d, # of Edges: %d, Theoretical Max messages 2*|E|: %d, Actual Message counter: %d", counter, g.getNumberOfEdges(), 2 * g.getNumberOfEdges(), Node.messageSentCounter));
-                        break outerLoop;
-
-                    }
-
+                    iterationCounter++;
                 }
-                System.out.println("");
-
-                counter++;
+                iterationCounter++;
             }
-            counter++;
+            System.out.println("\nGraph Structure\n" + graph);
+            graphNumber++;
         }
 
-        System.out.println("\n"+g);
     }
 
     //https://dzone.com/articles/random-number-generation-in-java

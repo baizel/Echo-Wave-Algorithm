@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.Deque;
 
 public class Node {
-    public static int messageSentCounter = 0;
+
+
+    public int messageSentCounter = 0;
     private int id;
     private ArrayList<Node> neighbours;
 
@@ -29,6 +31,10 @@ public class Node {
         return id;
     }
 
+    public int getMessageSentCounter() {
+        return messageSentCounter;
+    }
+
     public void addNeighbour(Node n) {
         neighbours.add(n);
     }
@@ -44,6 +50,10 @@ public class Node {
             sendToken(this, n);
             System.out.println(String.format("Node %d has send the token to the Node %d", getId(), n.getId()));
         }
+    }
+
+    public boolean isInitiator() {
+        return isInitiator;
     }
 
     public boolean runEchoExecution() throws IllegalAccessException {
@@ -84,8 +94,8 @@ public class Node {
         return false;
     }
 
-    private static void sendToken(Node sender,Node receiver) {
-        messageSentCounter++;
+    private static void sendToken(Node sender, Node receiver) {
+        sender.messageSentCounter++;
         receiver.messageQueue.add(new Token(sender));
     }
 
