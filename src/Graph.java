@@ -1,34 +1,37 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.*;
 
 public class Graph {
-    private static int numberOfNodes = 7;
     private ArrayList<Node> nodes = new ArrayList<>();
-    private int maximumNumberOfEdges = 0;
+    private int numberOfEdges = 0;
 
+    //https://stackoverflow.com/questions/20626312/remove-duplicate-element-from-the-set-in-java
+    private Set<Edge> edges = new HashSet<>();
 
     public Graph(int numOfNodes, ArrayList<ArrayList<Integer>> neighbour) {
-        numberOfNodes = numOfNodes;
-        for (int i = 0; i < numberOfNodes; i++) {
-            nodes.add(new Node(i));
+        for (int i = 0; i < numOfNodes; i++) {
+            Node n = new Node(i);
+            nodes.add(n);
         }
         generateNeighbours(neighbour);
-        maximumNumberOfEdges = (numberOfNodes * (numberOfNodes - 1)) / 2;
     }
 
     private void generateNeighbours(ArrayList<ArrayList<Integer>> neighbour) {
-        //hard code for now
         for (int i = 0; i < neighbour.size(); i++) {
             for (int j = 0; j < neighbour.get(i).size(); j++) {
-                getNode(i).addNeighbour(getNode(neighbour.get(i).get(j)));
+                Node neigh = getNode(neighbour.get(i).get(j));
+                Edge edge = new Edge(i, neigh.getId());
+                edges.add(edge);
+                getNode(i).addNeighbour(neigh);
             }
         }
+        numberOfEdges = edges.size();
     }
 
-    public int getMaximumNumberOfEdges() {
-        return maximumNumberOfEdges;
+    public int getNumberOfEdges() {
+        return numberOfEdges;
     }
 
     public Node getNode(int id) {
@@ -36,6 +39,10 @@ public class Graph {
             throw new IllegalArgumentException(String.format("Node Id %s out of bound", id));
         }
         return nodes.get(id);
+    }
+
+    public int getNumberOfNodes(){
+        return nodes.size();
     }
 
     @Override
@@ -107,3 +114,4 @@ public class Graph {
         return graphs;
     }
 }
+

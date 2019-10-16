@@ -1,3 +1,5 @@
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
@@ -13,8 +15,6 @@ public class Node {
     private int tokenReceivedCounter = 0;
     private boolean hasSendTokenToFather = false;
     private boolean hasBroadcastedToNeighbours = false;
-
-    private final static String MESSAGE = "A_MESSAGE";
 
     public Deque<Token> messageQueue;
 
@@ -41,7 +41,7 @@ public class Node {
     public void initiateEchoWave() {
         isInitiator = true;
         for (Node n : neighbours) {
-            sendToken(this, n, MESSAGE);
+            sendToken(this, n);
             System.out.println(String.format("Node %d has send the token to the Node %d", getId(), n.getId()));
         }
     }
@@ -59,11 +59,11 @@ public class Node {
         if (!hasBroadcastedToNeighbours) {
             for (Node n : neighbours) {
                 if (father != null && n != father) {
-                    sendToken(this, n, MESSAGE);
+                    sendToken(this, n);
                     System.out.println(String.format("Node %d has send a token to the Node %d", getId(), n.getId()));
+                    hasBroadcastedToNeighbours = true;
                 }
             }
-            hasBroadcastedToNeighbours = true;
         }
         if (tokenReceivedCounter >= neighbours.size()) {
             if (isInitiator) {
@@ -72,7 +72,7 @@ public class Node {
             } else {
                 if (father != null) {
                     if (!hasSendTokenToFather) {
-                        sendToken(this, father, MESSAGE);
+                        sendToken(this, father);
                         System.out.println(String.format("Node %d has send the token to the father Node %d", getId(), father.getId()));
                         hasSendTokenToFather = true;
                     }
@@ -84,9 +84,9 @@ public class Node {
         return false;
     }
 
-    private static void sendToken(Node sender, Node receiver, String message) {
+    private static void sendToken(Node sender,Node receiver) {
         messageSentCounter++;
-        receiver.messageQueue.add(new Token(sender, message));
+        receiver.messageQueue.add(new Token(sender));
     }
 
 

@@ -4,13 +4,17 @@ public class Test {
 
     public static void main(String[] args) {
         ArrayList<Graph> gs = Graph.GenerateGraphFromTxt("nodes.txt");
-        Graph g = gs.get(0);
-        System.out.println(gs.get(0));
-        int N = 7;
+//        for(Graph g: gs) {
+//
+//        }
+        Graph g = gs.get(1);
+        System.out.println(g);
+        int N = g.getNumberOfNodes();
         int K = 10;
         int counter = 0;
         boolean isInitiated = false;
         boolean decided = false;
+
         g.getNode(0).initiateEchoWave();
         outerLoop:
         for (int i = 0; i < N; i++) {
@@ -25,7 +29,7 @@ public class Test {
                         e.printStackTrace();
                     }
                     if (decided) {
-                        System.out.println(String.format("\nIteration: %d, Maximum Edges: %d, Theoretical Max messages 2*|E|: %d, Actual Message counter: %d", counter, g.getMaximumNumberOfEdges(), 2 * g.getMaximumNumberOfEdges(), Node.messageSentCounter));
+                        System.out.println(String.format("\nIteration: %d, # of Edges: %d, Theoretical Max messages 2*|E|: %d, Actual Message counter: %d", counter, g.getNumberOfEdges(), 2 * g.getNumberOfEdges(), Node.messageSentCounter));
                         break outerLoop;
 
                     }
@@ -38,7 +42,7 @@ public class Test {
             counter++;
         }
 
-        System.out.println(gs.get(0));
+        System.out.println("\n"+g);
     }
 
     //https://dzone.com/articles/random-number-generation-in-java
