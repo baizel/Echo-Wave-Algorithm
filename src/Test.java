@@ -20,13 +20,13 @@ public class Test {
                     int numberOfNodes = getRandomIntegerBetweenRange(1, N);
                     System.out.println("----------- Iteration "+ j + " with R value of "+numberOfNodes + " -----------------");
                     for (int k = 0; k < numberOfNodes; k++) {
-                        int randInt = getRandomIntegerBetweenRange(0, N - 1);
+                        int randNodeId = getRandomIntegerBetweenRange(0, N - 1);
                         if (!isInitiated) {
-                            System.out.println(String.format("Node %d has initiated", graph.getNode(randInt).getId()));
-                            graph.getNode(randInt).initiateEchoWave();
+                            System.out.println(String.format("Node %d has initiated", graph.getNode(randNodeId).getId()));
+                            graph.getNode(randNodeId).initiateEchoWave();
                             isInitiated = true;
                         } else {
-                            Node n = graph.getNode(randInt);
+                            Node n = graph.getNode(randNodeId);
                             hasDecided = n.runEchoExecution();
                         }
 
