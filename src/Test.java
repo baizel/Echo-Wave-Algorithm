@@ -17,9 +17,9 @@ public class Test {
             outerLoop:
             for (int i = 0; i < N; i++) {
                 for (int j = 0; j < K; j++) {
-                    int numberOfNodes = getRandomIntegerBetweenRange(0, N);
+                    int numberOfNodes = getRandomIntegerBetweenRange(1, N);
+                    System.out.println("----------- Iteration "+ j + " with R value of "+numberOfNodes + " -----------------");
                     for (int k = 0; k < numberOfNodes; k++) {
-
                         int randInt = getRandomIntegerBetweenRange(0, N - 1);
                         if (!isInitiated) {
                             System.out.println(String.format("Node %d has initiated", graph.getNode(randInt).getId()));

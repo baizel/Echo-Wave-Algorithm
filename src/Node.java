@@ -57,6 +57,9 @@ public class Node {
     }
 
     public boolean runEchoExecution() throws IllegalAccessException {
+        if (messageQueue.isEmpty()){
+            System.out.println(String.format("Node %d is asleep", getId()));
+        }
         while (!messageQueue.isEmpty()) {
             tokenReceivedCounter++;
             Token t = messageQueue.pop();
