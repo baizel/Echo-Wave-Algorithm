@@ -16,9 +16,11 @@ public class Test {
 
             outerLoop:
             for (int i = 0; i < N; i++) {
+                iterationCounter++;
                 for (int j = 0; j < K; j++) {
+                    iterationCounter++;
                     int numberOfNodes = getRandomIntegerBetweenRange(1, N);
-                    System.out.println("----------- Iteration "+ j + " with R value of "+numberOfNodes + " -----------------");
+                    System.out.println("----------- Iteration " + iterationCounter + " with R value of " + numberOfNodes + " -----------------");
                     for (int k = 0; k < numberOfNodes; k++) {
                         int randNodeId = getRandomIntegerBetweenRange(0, N - 1);
                         if (!isInitiated) {
@@ -45,9 +47,7 @@ public class Test {
                         }
 
                     }
-                    iterationCounter++;
                 }
-                iterationCounter++;
             }
             System.out.println("\nGraph Structure\n" + graph);
             graphNumber++;
