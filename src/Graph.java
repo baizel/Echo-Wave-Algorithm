@@ -9,9 +9,9 @@ public class Graph {
     private ArrayList<Node> nodes = new ArrayList<>();
     private int numberOfEdges;
 
-    public Graph(int numOfNodes, ArrayList<ArrayList<Integer>> neighbour) {
+    public Graph(int numOfNodes, ArrayList<ArrayList<Integer>> neighbour, boolean isVerbose) {
         for (int i = 0; i < numOfNodes; i++) {
-            nodes.add(new Node(i));
+            nodes.add(new Node(i,isVerbose));
         }
 
         //Create neighbours
@@ -76,7 +76,7 @@ public class Graph {
      * @param filename name of the file which contains the structure of the graphs
      * @return
      */
-    public static ArrayList<Graph> GenerateGraphFromTxt(String filename) {
+    public static ArrayList<Graph> GenerateGraphFromTxt(String filename, boolean isVerbose) {
         BufferedReader reader;
         ArrayList<Graph> graphs = new ArrayList<>();
         try {
@@ -89,7 +89,7 @@ public class Graph {
                     line = reader.readLine();
 
                     ArrayList<ArrayList<Integer>> neighbour = new ArrayList<>();
-                    while (!line.isEmpty()) {
+                    while (line != null && !line.isEmpty()) {
                         ArrayList<Integer> neigh = new ArrayList<>();
                         String[] n = line.split(",");
                         for (String i : n) {
@@ -98,7 +98,7 @@ public class Graph {
                         neighbour.add(neigh);
                         line = reader.readLine();
                     }
-                    graphs.add(new Graph(numOfNodes, neighbour));
+                    graphs.add(new Graph(numOfNodes, neighbour, isVerbose));
                 } else {
                     line = reader.readLine();
                 }
