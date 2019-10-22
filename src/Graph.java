@@ -8,8 +8,17 @@ import java.util.Set;
 public class Graph {
     private ArrayList<Node> nodes = new ArrayList<>();
     private int numberOfEdges;
+    private int numberOfNodes;
+    private boolean isVerbose;
+    private ArrayList<ArrayList<Integer>> initialState;
 
     public Graph(int numOfNodes, ArrayList<ArrayList<Integer>> neighbour, boolean isVerbose) {
+        this.isVerbose = isVerbose;
+        this.numberOfNodes = numOfNodes;
+        setUpNeighbours(neighbour,numOfNodes,isVerbose);
+        initialState = new ArrayList<>(neighbour);
+    }
+    private void setUpNeighbours(ArrayList<ArrayList<Integer>> neighbour,int numOfNodes,boolean isVerbose){
         for (int i = 0; i < numOfNodes; i++) {
             nodes.add(new Node(i,isVerbose));
         }
@@ -24,6 +33,10 @@ public class Graph {
             }
         }
         numberOfEdges = edges.size();
+    }
+    public void resetState(){
+        nodes = new ArrayList<>();
+        setUpNeighbours(initialState,numberOfNodes,isVerbose);
     }
 
     public int getNumberOfEdges() {
