@@ -14,7 +14,7 @@ public class Node {
     private boolean isInitiator = false;
     private Node father = null;
     private int tokenReceivedCounter = 0;
-    private boolean hasSendTokenToFather = false;
+    private boolean hasSentTokenToFather = false;
     private boolean hasBroadcastedToNeighbours = false;
     private boolean isVerbose = true;
 
@@ -51,7 +51,7 @@ public class Node {
         for (Node n : neighbours) {
             sendToken(this, n);
             if (isVerbose)
-                System.out.println(String.format("Node %d has send the token to the Node %d", getId(), n.getId()));
+                System.out.println(String.format("Node %d has sent the token to the Node %d", getId(), n.getId()));
         }
     }
 
@@ -79,7 +79,7 @@ public class Node {
                 if (father != null && n != father) {
                     sendToken(this, n);
                     if (isVerbose)
-                        System.out.println(String.format("Node %d has send a token to the Node %d", getId(), n.getId()));
+                        System.out.println(String.format("Node %d has sent a token to the Node %d", getId(), n.getId()));
                     hasBroadcastedToNeighbours = true;
                 }
             }
@@ -91,11 +91,11 @@ public class Node {
                 return true;
             } else {
                 if (father != null) {
-                    if (!hasSendTokenToFather) {
+                    if (!hasSentTokenToFather) {
                         sendToken(this, father);
                         if (isVerbose)
-                            System.out.println(String.format("Node %d has send the token to the father Node %d", getId(), father.getId()));
-                        hasSendTokenToFather = true;
+                            System.out.println(String.format("Node %d has sent the token to the father Node %d", getId(), father.getId()));
+                        hasSentTokenToFather = true;
                     }
                 } else {
                     throw new IllegalAccessException("Father is null for non initiator node");

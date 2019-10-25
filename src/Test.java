@@ -1,6 +1,9 @@
 import java.io.*;
 import java.util.ArrayList;
 
+/**
+ *
+ */
 public class Test {
     private final static int K = 10;
     private final static String NODE_DATA_FILE_NAME = "nodes.txt";
@@ -8,10 +11,12 @@ public class Test {
     private final static int SAMPLE_SIZE = 10000;
 
     public static void main(String[] args) throws IllegalAccessException {
-//        averageIterations(NUMBER_OF_ITERATION_FOR_AVERAGE);
-//        GraphAnalysisData d = runAlgorithm(Graph.GenerateGraphFromTxt(NODE_DATA_FILE_NAME, true).get(0), "Graph 0", IS_VERBOSE_OUTPUT);
-//        System.out.println(d.getTimeOfExecution());
-        analyseData(SAMPLE_SIZE);
+        int counter = 1;
+        for (Graph g: Graph.GenerateGraphFromTxt(NODE_DATA_FILE_NAME,IS_VERBOSE_OUTPUT)){
+            runAlgorithm(g,("Graph "+ counter),IS_VERBOSE_OUTPUT);
+            counter++;
+        }
+//        generateDataForAnalysis(SAMPLE_SIZE);
     }
 
     private static GraphAnalysisData runAlgorithm(Graph graph, String graphTitle, boolean isVerbose) throws IllegalAccessException {
@@ -81,7 +86,8 @@ public class Test {
         return data;
     }
 
-    public static GraphAnalysisData[][] analyseData(int sampleSize) throws IllegalAccessException {
+    public static GraphAnalysisData[][] generateDataForAnalysis(int sampleSize) throws IllegalAccessException {
+        System.out.println("Running Echo wave algorithm for " + sampleSize + " iterations");
         ArrayList<Graph> graphs = Graph.GenerateGraphFromTxt(NODE_DATA_FILE_NAME, false);
         GraphAnalysisData[][] data = new GraphAnalysisData[graphs.size()][sampleSize];
         int graphNumber = 0;
@@ -93,16 +99,15 @@ public class Test {
             }
             graphNumber++;
         }
-//        for (int i = 0; i < data[0].length; i++) {
-//            System.out.println(data[0][i].getIterationCount());
-//        }
         generateOutputFile(data);
+        System.out.println("Data generated for " + sampleSize + " sets");
         return data;
     }
 
     private static void generateOutputFile(GraphAnalysisData[][] data) {
         for (int i = 0; i < data.length; i++) {
-            File fout = new File("graph" + (i + 1) + ".txt");
+            String fileNmae = "graph" + (i + 1) + ".txt";
+            File fout = new File(fileNmae);
             try {
                 fout.createNewFile();
                 FileOutputStream fos = new FileOutputStream(fout);
@@ -128,6 +133,7 @@ public class Test {
                     }
                 }
                 bw.close();
+                System.out.println("Generating output file " + fileNmae);
             } catch (IOException e) {
                 e.printStackTrace();
             }

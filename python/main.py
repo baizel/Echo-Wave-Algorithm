@@ -1,5 +1,6 @@
 import numpy
 import scipy.stats as stats
+
 if __name__ == "__main__":
     g = []
     for i in range(1, 5):
@@ -13,4 +14,4 @@ if __name__ == "__main__":
         g.append(iteration)
         print("Graph {}, Standard variance: {}, Average Time: {}".format(i, var, averageTime))
     print(stats.normaltest(g[1]))
-    print(stats.f_oneway(g[1],g[3]))
+    print(stats.f_oneway(g[1], g[3]))
