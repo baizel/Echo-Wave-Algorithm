@@ -5,6 +5,10 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Graph object to mange all the nodes. Class will generate a Graph object given a txt file
+ * @author baizel
+ */
 public class Graph {
     private ArrayList<Node> nodes = new ArrayList<>();
     private int numberOfEdges;
@@ -16,15 +20,22 @@ public class Graph {
         this.isVerbose = isVerbose;
         this.numberOfNodes = numOfNodes;
         setUpNeighbours(neighbour,numOfNodes,isVerbose);
-        initialState = new ArrayList<>(neighbour);
+        initialState = new ArrayList<>(neighbour); //used to reset after running the algorithm
     }
+
+    /**
+     * Adds neighbours to the nodes. ith position of the array represents the parent node while jth position indicates the neighbour node
+     * @param neighbour Array within array where i is the parent node and j is the neighbour for [i][j]
+     * @param numOfNodes the number of nodes in the graph
+     * @param isVerbose indicates whether output should be printed
+     */
     private void setUpNeighbours(ArrayList<ArrayList<Integer>> neighbour,int numOfNodes,boolean isVerbose){
         for (int i = 0; i < numOfNodes; i++) {
             nodes.add(new Node(i,isVerbose));
         }
 
         //Create neighbours
-        Set<Edge> edges = new HashSet<>();
+        Set<Edge> edges = new HashSet<>(); // Removes duplicate objects
         for (int i = 0; i < neighbour.size(); i++) {
             for (int j = 0; j < neighbour.get(i).size(); j++) {
                 Node neigh = getNode(neighbour.get(i).get(j));
@@ -89,7 +100,7 @@ public class Graph {
      * @param filename name of the file which contains the structure of the graphs
      * @return
      */
-    public static ArrayList<Graph> GenerateGraphFromTxt(String filename, boolean isVerbose) {
+    public static ArrayList<Graph> generateGraphFromTxt(String filename, boolean isVerbose) {
         BufferedReader reader;
         ArrayList<Graph> graphs = new ArrayList<>();
         try {

@@ -11,7 +11,7 @@ if __name__ == "__main__":
         time = [int(i) for i in s_time.split(",")]
         var = numpy.var(iteration)
         averageTime = str(numpy.average(time) / 1e+6) + "ms"
+        avgIteration = str(numpy.average(iteration))
         g.append(iteration)
-        print("Graph {}, Standard variance: {}, Average Time: {}".format(i, var, averageTime))
-    print(stats.normaltest(g[1]))
-    print(stats.f_oneway(g[1], g[3]))
+        print("Graph {}, Standard variance: {}, Average Time: {}, Average iteration: {}".format(i, var, averageTime,avgIteration))
+    print(stats.f_oneway(g[0],g[3]))

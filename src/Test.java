@@ -2,23 +2,34 @@ import java.io.*;
 import java.util.ArrayList;
 
 /**
- *
+ * Class to run the echo wave algorithm.
+ * This class also has the ability to output recorded data as a text file
+ * @author baizel
  */
 public class Test {
     private final static int K = 10;
     private final static String NODE_DATA_FILE_NAME = "nodes.txt";
     private final static boolean IS_VERBOSE_OUTPUT = true;
-    private final static int SAMPLE_SIZE = 10000;
+    private final static int SAMPLE_SIZE = 1000;
 
     public static void main(String[] args) throws IllegalAccessException {
         int counter = 1;
-        for (Graph g: Graph.GenerateGraphFromTxt(NODE_DATA_FILE_NAME,IS_VERBOSE_OUTPUT)){
+        for (Graph g: Graph.generateGraphFromTxt(NODE_DATA_FILE_NAME,IS_VERBOSE_OUTPUT)){
             runAlgorithm(g,("Graph "+ counter),IS_VERBOSE_OUTPUT);
             counter++;
         }
 //        generateDataForAnalysis(SAMPLE_SIZE);
     }
 
+    /**
+     * Runs the algorithm for a single graph given. Data is collected during the execution and returned when
+     * algorithm terminates as a GraphAnalysisData object
+     * @param graph Graph object
+     * @param graphTitle a string used for file name and for debug output
+     * @param isVerbose prints all outputs during the execution of the algorithm
+     * @return GraphAnalysisData
+     * @throws IllegalAccessException if the graph reaches an illegal state
+     */
     private static GraphAnalysisData runAlgorithm(Graph graph, String graphTitle, boolean isVerbose) throws IllegalAccessException {
         String sum = "";
         GraphAnalysisData data = null;
@@ -36,7 +47,7 @@ public class Test {
         outerLoop:
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < K; j++) {
-                int numberOfNodes = getRandomIntegerBetweenRange(1, N);
+                int numberOfNodes = getRandomIntegerBetweenRange(1, N); // The R Value
                 if (isVerbose) {
                     System.out.println("----------- Iteration " + iterationCounter + " with R value of " + numberOfNodes + " -----------------");
                 }
@@ -71,9 +82,7 @@ public class Test {
                             System.out.println(sum);
                         }
                         break outerLoop;
-
                     }
-
                 }
                 iterationCounter++;
             }
@@ -82,13 +91,19 @@ public class Test {
         if (isVerbose) {
             System.out.println("\nOutput Tree Structure\n" + graph);
         }
-
         return data;
     }
 
+    /**
+     * Runs algorithm each graph in nodes.txt for a given number.
+     *
+     * @param sampleSize the number of iterations
+     * @return returns sampleSize of data for each graph as a 2d array [NumberOfGraphs][sampleSize]
+     * @throws IllegalAccessException if the graph is in a bad state
+     */
     public static GraphAnalysisData[][] generateDataForAnalysis(int sampleSize) throws IllegalAccessException {
         System.out.println("Running Echo wave algorithm for " + sampleSize + " iterations");
-        ArrayList<Graph> graphs = Graph.GenerateGraphFromTxt(NODE_DATA_FILE_NAME, false);
+        ArrayList<Graph> graphs = Graph.generateGraphFromTxt(NODE_DATA_FILE_NAME, false);
         GraphAnalysisData[][] data = new GraphAnalysisData[graphs.size()][sampleSize];
         int graphNumber = 0;
         for (Graph g : graphs) {
@@ -104,10 +119,11 @@ public class Test {
         return data;
     }
 
+    //Writes data to file
     private static void generateOutputFile(GraphAnalysisData[][] data) {
         for (int i = 0; i < data.length; i++) {
-            String fileNmae = "graph" + (i + 1) + ".txt";
-            File fout = new File(fileNmae);
+            String fileName = "graph" + (i + 1) + ".txt";
+            File fout = new File(fileName);
             try {
                 fout.createNewFile();
                 FileOutputStream fos = new FileOutputStream(fout);
@@ -133,7 +149,7 @@ public class Test {
                     }
                 }
                 bw.close();
-                System.out.println("Generating output file " + fileNmae);
+                System.out.println("Generating output file " + fileName);
             } catch (IOException e) {
                 e.printStackTrace();
             }

@@ -2,21 +2,28 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 
+/**
+ * Node class that stimulates a worker node
+ * This class has the main echo wave algorithm
+ * Each node has its own message queue which can be invoked by other
+ * objects using the provided methods
+ * @author baizel
+ */
 public class Node {
 
 
+    private int id;
     public int messageSentCounter = 0;
     public Deque<Token> messageQueue;
-    private int id;
     private ArrayList<Node> neighbours;
 
     //Echo wave vars
-    private boolean isInitiator = false;
     private Node father = null;
-    private int tokenReceivedCounter = 0;
-    private boolean hasSentTokenToFather = false;
-    private boolean hasBroadcastedToNeighbours = false;
-    private boolean isVerbose = true;
+    private int tokenReceivedCounter = 0; // Keep count of the received messages
+    private boolean isInitiator = false;
+    private boolean hasSentTokenToFather = false; //Used to make sure message is ony sent once
+    private boolean hasBroadcastedToNeighbours = false; //Used to make sure message is ony sent once
+    private boolean isVerbose; // Used to decided if output should be printed
 
     public Node(int id, boolean isVerbose) {
         this.id = id;
@@ -25,6 +32,13 @@ public class Node {
         this.isVerbose = isVerbose;
     }
 
+    /**
+     * Static method to send message to other nodes.
+     * A token object is added to the receiver queue when invoked
+     * Token contains the id of the sender node
+     * @param sender Node Object
+     * @param receiver Node Object
+     */
     private static void sendToken(Node sender, Node receiver) {
         sender.messageSentCounter++;
         receiver.messageQueue.add(new Token(sender));
@@ -48,6 +62,7 @@ public class Node {
 
     public void initiateEchoWave() {
         isInitiator = true;
+        //Send a token to all neighbours
         for (Node n : neighbours) {
             sendToken(this, n);
             if (isVerbose)
@@ -60,9 +75,13 @@ public class Node {
     }
 
     public boolean runEchoExecution() throws IllegalAccessException {
-        if (messageQueue.isEmpty() && isVerbose) {
-            System.out.println(String.format("Node %d is asleep", getId()));
+        //If no message in queue then node will not do any work
+        if (messageQueue.isEmpty()) {
+            if (isVerbose)
+                System.out.println(String.format("Node %d is asleep", getId()));
+            return false;
         }
+        //process message and set a father if needed
         while (!messageQueue.isEmpty()) {
             tokenReceivedCounter++;
             Token t = messageQueue.pop();
@@ -74,6 +93,7 @@ public class Node {
                     System.out.println(String.format("Node %d has set the father to node %d", getId(), father.getId()));
             }
         }
+        //Send a token to all neighbours if it hasn't already
         if (!hasBroadcastedToNeighbours) {
             for (Node n : neighbours) {
                 if (father != null && n != father) {
@@ -85,11 +105,13 @@ public class Node {
             }
         }
         if (tokenReceivedCounter >= neighbours.size()) {
+            //if initiator and all message has been received then node is in a decided state
             if (isInitiator) {
                 if (isVerbose)
                     System.out.println("Initiator node has decided");
                 return true;
             } else {
+                //Send a token to the father if it hasn't already
                 if (father != null) {
                     if (!hasSentTokenToFather) {
                         sendToken(this, father);
@@ -98,6 +120,7 @@ public class Node {
                         hasSentTokenToFather = true;
                     }
                 } else {
+                    //Should never be in this state unless there is an error with the input file
                     throw new IllegalAccessException("Father is null for non initiator node");
                 }
             }

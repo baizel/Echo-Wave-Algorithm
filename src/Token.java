@@ -1,5 +1,10 @@
-public class Token {
+/**
+ * Simulates a token or a message
+ *
+ * @author baizel
+ */
 
+public class Token {
     private Node source;
 
     public Token(Node source) {
@@ -9,5 +14,4 @@ public class Token {
     public Node getSource() {
         return source;
     }
-
 }
