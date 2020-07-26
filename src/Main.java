@@ -207,7 +207,13 @@ public class Main {
                     break;
                 case "-h":
                 case "--help":
-                    System.out.println("Use -r to manually choose the r value for every iteration");
+                    System.out.println("--------------- Help Menu -------------");
+                    System.out.println("Options: ");
+                    System.out.println("-r              Use -r to manually choose the r value for every iteration");
+                    System.out.println("-n <filename>   Use -n to specify a txt file that contains the node structures. See readme for file structure");
+                    System.out.println("-h, --help      See this menu");
+                    System.out.println("----------------------------------------");
+                    System.exit(0);
                     break;
             }
             count++;
