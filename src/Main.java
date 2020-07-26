@@ -1,21 +1,25 @@
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 /**
  * Class to run the echo wave algorithm.
  * This class also has the ability to output recorded data as a text file
+ *
  * @author baizel
  */
-public class Test {
+public class Main {
     private final static int K = 10;
-    private final static String NODE_DATA_FILE_NAME = "nodes.txt";
     private final static boolean IS_VERBOSE_OUTPUT = true;
     private final static int SAMPLE_SIZE = 1000;
+    private static String nodeDataFileName = "nodes.txt";
+    private static boolean isUserInput = false;
 
     public static void main(String[] args) throws IllegalAccessException {
+        parseArgs(args);
         int counter = 1;
-        for (Graph g: Graph.generateGraphFromTxt(NODE_DATA_FILE_NAME,IS_VERBOSE_OUTPUT)){
-            runAlgorithm(g,("Graph "+ counter),IS_VERBOSE_OUTPUT);
+        for (Graph g : Graph.generateGraphFromTxt(nodeDataFileName, IS_VERBOSE_OUTPUT)) {
+            runAlgorithm(g, ("Graph " + counter), IS_VERBOSE_OUTPUT);
             counter++;
         }
 //        generateDataForAnalysis(SAMPLE_SIZE);
@@ -24,9 +28,10 @@ public class Test {
     /**
      * Runs the algorithm for a single graph given. Data is collected during the execution and returned when
      * algorithm terminates as a GraphAnalysisData object
-     * @param graph Graph object
+     *
+     * @param graph      Graph object
      * @param graphTitle a string used for file name and for debug output
-     * @param isVerbose prints all outputs during the execution of the algorithm
+     * @param isVerbose  prints all outputs during the execution of the algorithm
      * @return GraphAnalysisData
      * @throws IllegalAccessException if the graph reaches an illegal state
      */
@@ -47,7 +52,7 @@ public class Test {
         outerLoop:
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < K; j++) {
-                int numberOfNodes = getRandomIntegerBetweenRange(1, N); // The R Value
+                int numberOfNodes = isUserInput ? getUserRValue(N) : getRandomIntegerBetweenRange(1, N); // The R Value
                 if (isVerbose) {
                     System.out.println("----------- Iteration " + iterationCounter + " with R value of " + numberOfNodes + " -----------------");
                 }
@@ -85,6 +90,7 @@ public class Test {
                     }
                 }
                 iterationCounter++;
+                getUserInput("Press enter to continue to next iteration");
             }
             iterationCounter++;
         }
@@ -103,7 +109,7 @@ public class Test {
      */
     public static GraphAnalysisData[][] generateDataForAnalysis(int sampleSize) throws IllegalAccessException {
         System.out.println("Running Echo wave algorithm for " + sampleSize + " iterations");
-        ArrayList<Graph> graphs = Graph.generateGraphFromTxt(NODE_DATA_FILE_NAME, false);
+        ArrayList<Graph> graphs = Graph.generateGraphFromTxt(nodeDataFileName, false);
         GraphAnalysisData[][] data = new GraphAnalysisData[graphs.size()][sampleSize];
         int graphNumber = 0;
         for (Graph g : graphs) {
@@ -156,9 +162,56 @@ public class Test {
         }
     }
 
+    private static String getUserInput(String prompt) {
+        System.out.println(prompt);
+        Scanner in = new Scanner(System.in);
+        return in.nextLine();
+    }
+
+    private static Integer convertUserStringToInt(String input) {
+        try {
+            return Integer.parseInt(input);
+        } catch (NumberFormatException ex) {
+            return null;
+        }
+    }
+
     //https://dzone.com/articles/random-number-generation-in-java
     public static int getRandomIntegerBetweenRange(double min, double max) {
         return (int) ((int) (Math.random() * ((max - min) + 1)) + min);
+    }
+
+    private static int getUserRValue(int N) {
+        Integer rValue = null;
+        boolean isValidRval = false;
+        while (!isValidRval) {
+            rValue = convertUserStringToInt(getUserInput("Enter an R value between 1 and " + N));
+            isValidRval = rValue != null && rValue >= 1 && rValue <= N;
+        }
+        return rValue;
+    }
+
+    private static void parseArgs(String[] args) {
+        int count = 0;
+        for (String s : args) {
+            switch (s) {
+                case "-n":
+                    try {
+                        nodeDataFileName = args[count + 1];
+                    } catch (ArrayIndexOutOfBoundsException ex) {
+                        throw new IllegalArgumentException("Please provide a file name for the nodes");
+                    }
+                    break;
+                case "-r":
+                    isUserInput = true;
+                    break;
+                case "-h":
+                case "--help":
+                    System.out.println("Use -r to manually choose the r value for every iteration");
+                    break;
+            }
+            count++;
+        }
     }
 }
 
